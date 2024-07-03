@@ -1,0 +1,127 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model CommunityForum {
+  createdAt   DateTime  @default(now())
+  createdDate DateTime?
+  description String?
+  id          String    @id @default(cuid())
+  title       String?
+  updatedAt   DateTime  @updatedAt
+  user        User?     @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model Resource {
+  category  String?
+  content   String?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  title     String?
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Location {
+  address   String?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String?
+  rating    Int?
+  typeField String?
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Milestone {
+  createdAt     DateTime  @default(now())
+  description   String?
+  id            String    @id @default(cuid())
+  milestoneDate DateTime?
+  title         String?
+  updatedAt     DateTime  @updatedAt
+  user          User?     @relation(fields: [userId], references: [id])
+  userId        String?
+}
+
+model UserProfile {
+  createdAt       DateTime @default(now())
+  familyInfo      String?
+  id              String   @id @default(cuid())
+  privacySettings Json?
+  updatedAt       DateTime @updatedAt
+  user            User?    @relation(fields: [userId], references: [id])
+  userId          String?
+}
+
+model ParentingTip {
+  createdAt  DateTime  @default(now())
+  id         String    @id @default(cuid())
+  tipContent String?
+  tipDate    DateTime?
+  updatedAt  DateTime  @updatedAt
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String?
+}
+
+model Event {
+  createdAt DateTime  @default(now())
+  eventDate DateTime?
+  eventName String?
+  id        String    @id @default(cuid())
+  location  String?
+  updatedAt DateTime  @updatedAt
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Chat {
+  createdAt DateTime  @default(now())
+  id        String    @id @default(cuid())
+  message   String?
+  receiver  String?
+  sender    String?
+  sentDate  DateTime?
+  updatedAt DateTime  @updatedAt
+}
+
+model ProductReview {
+  createdAt     DateTime @default(now())
+  id            String   @id @default(cuid())
+  photoUrl      String?
+  productName   String?
+  rating        Int?
+  reviewContent String?
+  updatedAt     DateTime @updatedAt
+  user          User?    @relation(fields: [userId], references: [id])
+  userId        String?
+}
+
+model User {
+  communityForums CommunityForum[]
+  createdAt       DateTime         @default(now())
+  email           String?          @unique
+  events          Event[]
+  firstName       String?
+  id              String           @id @default(cuid())
+  joinedDate      DateTime?
+  lastName        String?
+  locations       Location[]
+  milestones      Milestone[]
+  parentingTips   ParentingTip[]
+  password        String
+  productReviews  ProductReview[]
+  resources       Resource[]
+  roles           Json
+  updatedAt       DateTime         @updatedAt
+  username        String           @unique
+  userProfiles    UserProfile[]
+}
